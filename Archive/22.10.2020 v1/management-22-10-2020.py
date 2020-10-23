@@ -1,5 +1,5 @@
 # Created 21.10.2020 by MikeMichael225
-# Version 22.10.2020 21:18
+# Version 22.10.2020
 # This script moves all of the files inside a specified folder to folder with name of their suffixes (extensions)
 
 import os
@@ -11,20 +11,9 @@ from watchdog.events import FileSystemEventHandler
 
 
 ARG_LIST = (sys.argv)
-IGNORED_LIST = []
-
-if '-ignore' in ARG_LIST:
-    i = 0
-    for arg in ARG_LIST[(ARG_LIST.index('-ignore')+1):]:
-        IGNORED_LIST.append(arg)
-        print(f'Ignoring "{IGNORED_LIST[i]}" extension')
-        i = i+1
-
-
 if not '-path' in ARG_LIST:
     print('Path not specified! Use argument -path! For example: -path C:\\Users\\username\\Downloads')
     os._exit(1)
-
 
 FOLDER = Path(ARG_LIST[ARG_LIST.index("-path")+1].replace('\\', '/'))
 
@@ -59,7 +48,7 @@ def create_folders(folder):
 
 def move_files(folder, index):
     for file in folder.glob("*"):
-        if file.is_file() and not file.suffix in IGNORED_LIST:
+        if file.is_file():
             try:
                 INDEX = f"({index})"
                 Path(f"{folder}/{file.name}").rename(Path(
@@ -126,9 +115,6 @@ def add_event_listener(folder):
                 return None
 
             elif event.event_type == 'created':
-                update(FOLDER)
-
-            elif event.event_type == 'modified':
                 update(FOLDER)
 
     if __name__ == '__main__':
